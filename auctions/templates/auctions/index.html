@@ -5,5 +5,17 @@
     {% if message %}
         <div>{{ message }}</div>
     {% endif %}
+    
+    {% for listing in listings %}
+        <br>
+        <h2>Listing: {{listing.title}}</h2>
+        <img src="{{listing.url}}" width="500" height="600">
+        <br>
+        <br>
+        <!-- <h2>${{listing.bid}}</h2> -->
+        <h3>Details</h3>
+        <li>Listed by: Static Name Here</li>
+        <li>Category: {{listing.category}} </li>
+    {% endfor %}
 
 {% endblock %}

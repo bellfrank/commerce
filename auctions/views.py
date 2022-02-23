@@ -6,14 +6,21 @@ from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django import forms
 from django.contrib import messages
+from django.core.mail import send_mail
 
 
 
-from .models import User, AuctionListings
+from .models import User, AuctionListings, AuctionBids, AuctionComments
 
 
 def index(request):
-    return render(request, "auctions/index.html")
+    listings = AuctionListings.objects.all()
+    bids = AuctionBids.objects.all()
+    comments = AuctionComments.objects.all()
+    
+    return render(request, "auctions/index.html",{
+        "listings": listings
+    })
 
 def login_view(request):
     if request.method == "POST":
@@ -70,9 +77,12 @@ def register(request):
 @login_required
 def create_listing(request):
     # check if method is a post
+    print(request.user)
     if request.method == "POST":
-        # take in the data the user submitted and save it as a form
+        # create a form instance and populate it with data from the request:
         form = GeeksForm(request.POST)
+        form.instance.user = request.user
+        print(form)
         # check if the form data is valid
         if form.is_valid():
             # save the form data to model
@@ -90,15 +100,9 @@ def create_listing(request):
             "form": GeeksForm()
         })
 
-# class NewListingForm(forms.Form):
-#     item_title = forms.CharField(max_length=64)
-#     item_description = forms.CharField(max_length=64)
-#     item_startbid = forms.DecimalField(max_digits=4, decimal_places=2)
-#     item_url = forms.URLField(required=False)
-#     item_category = forms.CharField(required=False)
 
 class GeeksForm(forms.ModelForm):
     # specify the name of model to use
     class Meta:
         model = AuctionListings
-        fields = "__all__"
+        exclude = ['user']
