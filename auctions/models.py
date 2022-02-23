@@ -12,7 +12,8 @@ class AuctionListings(models.Model):
     description = models.CharField(max_length=64)
     last_modified = models.DateTimeField(auto_now_add = True)
 
-    url = models.URLField(blank=True, null=True)
+    #  = models.URLField(blank=True, null=True)
+    img = models.ImageField(upload_to = "images/")
     category = models.CharField(max_length=64, blank=True, null=True)
 
     def __str__(self):

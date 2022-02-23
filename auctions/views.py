@@ -87,7 +87,7 @@ def create_listing(request):
         if form.is_valid():
             # save the form data to model
             form.save()
-            messages.success(request, 'Form submission successful')
+            messages.success(request, 'Form submission successfulss')
             return HttpResponseRedirect(reverse("index"))
 
         else:
