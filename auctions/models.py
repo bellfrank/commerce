@@ -13,7 +13,7 @@ class AuctionListings(models.Model):
     last_modified = models.DateTimeField(auto_now_add = True)
 
     #  = models.URLField(blank=True, null=True)
-    img = models.ImageField(upload_to = "images/")
+    img = models.ImageField(upload_to='images/')
     category = models.CharField(max_length=64, blank=True, null=True)
 
     def __str__(self):

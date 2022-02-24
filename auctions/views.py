@@ -15,6 +15,7 @@ from .models import User, AuctionListings, AuctionBids, AuctionComments
 
 def index(request):
     listings = AuctionListings.objects.all()
+    
     bids = AuctionBids.objects.all()
     comments = AuctionComments.objects.all()
     
@@ -80,14 +81,14 @@ def create_listing(request):
     print(request.user)
     if request.method == "POST":
         # create a form instance and populate it with data from the request:
-        form = GeeksForm(request.POST)
+        # request.FILES allows us to handle uploaded files with a model
+        form = GeeksForm(request.POST, request.FILES)
         form.instance.user = request.user
-        print(form)
+
         # check if the form data is valid
         if form.is_valid():
             # save the form data to model
             form.save()
-            messages.success(request, 'Form submission successfulss')
             return HttpResponseRedirect(reverse("index"))
 
         else:

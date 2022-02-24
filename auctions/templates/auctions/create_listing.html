@@ -5,7 +5,7 @@
     {% if message %}
         <div>{{ message }}</div>
     {% endif %}
-    <form action="{% url 'create_listing' %}" method="post">
+    <form action="{% url 'create_listing' %}" method="post" enctype="multipart/form-data">
         {% csrf_token %}
         {{ form.as_p }}
         <input type="submit">
