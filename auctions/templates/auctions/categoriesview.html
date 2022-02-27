@@ -1,7 +1,9 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-    <h2> {{ cats }} Category</h2>
+
+{% if category_posts %}
+    <h2> {{ cats }}</h2>
 
     <div class="w-layout-grid get-started-grid">
     {% for listing in category_posts %}
@@ -22,4 +24,10 @@
         <!-- </a> -->
     {% endfor %}
     </div>
+
+{% else %}
+    <h2>Sorry, this page doesn't exist</h2>
+
+{% endif %}
+
 {% endblock %}
