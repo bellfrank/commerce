@@ -1,0 +1,25 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h2> {{ cats }} Category</h2>
+
+    <div class="w-layout-grid get-started-grid">
+    {% for listing in category_posts %}
+        <div  class="feature-card w-inline-block" >
+            <div class="tag">
+            <div >${{listing.price}}</div>
+            </div>
+            
+            <div class="licence-graphic">
+            {% if listing.img %}
+            <img src="{{listing.img.url}}" alt="" class="started-asset">
+            {% endif %}
+            </div>
+            <h5>{{listing.title}}</h5>
+            <p>{{listing.description}}<br></p>
+            <!-- <a href="/playgorund/filter" class="feature-card w-inline-block"> -->
+        </div>
+        <!-- </a> -->
+    {% endfor %}
+    </div>
+{% endblock %}

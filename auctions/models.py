@@ -15,6 +15,10 @@ class Category(models.Model):
 
 category_choices = Category.objects.all().values_list('name','name')
 
+choice_list = []
+for item in category_choices:
+    choice_list.append(item)
+
 class AuctionListings(models.Model):
     # make our user foreign key so if user deletes account, his posts get removed as well :) 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -27,7 +31,7 @@ class AuctionListings(models.Model):
     # = models.URLField(blank=True, null=True)
     img = models.ImageField(upload_to='images/')
 
-    category = models.CharField(max_length=64, blank=True, null=True, choices=category_choices)
+    category = models.CharField(max_length=64, blank=True, null=True, choices=choice_list)
 
     def __str__(self):
         return f"{self.id}: {self.title} {self.description} {self.url} {self.category}"

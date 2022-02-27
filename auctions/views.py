@@ -11,7 +11,7 @@ from django.core.mail import send_mail
 
 
 
-from .models import User, AuctionListings, AuctionBids, AuctionComments
+from .models import User, AuctionListings, AuctionBids, AuctionComments, Category
 
 
 def index(request):
@@ -132,6 +132,26 @@ def listing_page(request, listing_id):
             "form": BidForm()
         })
 
+@login_required
+def categories(request):
+    category_choices = Category.objects.all().values_list('name','name')
+
+    choice_list = []
+    for item in category_choices:
+        choice_list.append(item)
+    
+    return render(request, "auctions/categories.html", {
+            "choice_list": choice_list
+        })
+
+
+@login_required
+def categoryview(request, cats):
+    category_posts = AuctionListings.objects.filter(category=cats)
+    return render(request, "auctions/categoriesview.html", {
+            "cats": cats,
+            "category_posts": category_posts
+        })
 
 
 class GeeksForm(forms.ModelForm):
