@@ -1,22 +1,44 @@
 {% extends "auctions/layout.html" %}
+{% load static %}
 
 {% block body %}
+
     <h2>Active Listings</h2>
     {% if message %}
         <div>{{ message }}</div>
     {% endif %}
     
+    <div class="w-layout-grid get-started-grid">
+  
     {% for listing in listings %}
-        <br>
-        <h2>Listing: {{listing.title}}</h2>
-        <img src="static/{{listing.img}}" width="500" height="600">
-        <br>
-        <br>
-        <!-- <h2>${{listing.bid}}</h2> -->
-        <h3>Details</h3>
-        <li>Listed by: {{listing.user}}</li>
-        <li>Category: {{listing.category}} </li>
-        <li>Last Updated: {{listing.last_modified}} </li>
+    <div  class="feature-card w-inline-block" >
+      <div class="tag">
+        <div >${{listing.price}}</div>
+      </div>
+      
+      <div class="licence-graphic">
+        {% if listing.img %}
+        <img src="{{listing.img.url}}" alt="" class="started-asset">
+        {% endif %}
+      </div>
+      <h5>{{listing.title}}</h5>
+      <p>{{listing.description}}<br></p>
+       <!-- <a href="/playgorund/filter" class="feature-card w-inline-block"> -->
+    </div>
+    <!-- </a> -->
+    
     {% endfor %}
 
+    </div>
+
 {% endblock %}
+
+        <!-- <h3>Details</h3>
+        <li>{{listing.description}}</li>
+        <li>Listed by: {{listing.user}}</li>
+        <li>Category: {{listing.category}} </li>
+        <li>Last Updated: {{listing.last_modified}} </li> -->
+
+
+
+        

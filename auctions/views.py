@@ -1,3 +1,4 @@
+
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
@@ -20,7 +21,9 @@ def index(request):
     comments = AuctionComments.objects.all()
     
     return render(request, "auctions/index.html",{
-        "listings": listings
+        "listings": listings,
+        "bids":bids,
+        "comments": comments
     })
 
 def login_view(request):
@@ -78,7 +81,6 @@ def register(request):
 @login_required
 def create_listing(request):
     # check if method is a post
-    print(request.user)
     if request.method == "POST":
         # create a form instance and populate it with data from the request:
         # request.FILES allows us to handle uploaded files with a model
@@ -101,9 +103,52 @@ def create_listing(request):
             "form": GeeksForm()
         })
 
+@login_required
+def listing_page(request, listing_id):
+    print("inside listing page views.py")
+    listing_page = AuctionListings.objects.get(id=listing_id)
+    print("Printing list page")
+    
+    if request.method == "POST":
+        # create a form instance and populate it with data from the request:
+        # request.FILES allows us to handle uploaded files with a model
+        
+        form = BidForm(request.POST)
+        form.instance.user = AuctionListings.request.bid_user
+
+        # check if the form data is valid
+        if form.is_valid():
+            # save the form data to model
+            form.save()
+            return HttpResponseRedirect(reverse("index"))
+
+        else:
+            # if the form is invalid then we re-render the page with the existing format
+            return render(request, "auctions/listing.html", {
+                "form": form
+            })
+
+    return render(request, "auctions/listing.html", {
+            "form": BidForm()
+        })
+
+
 
 class GeeksForm(forms.ModelForm):
     # specify the name of model to use
     class Meta:
         model = AuctionListings
-        exclude = ['user']
+        fields = ('title', 'description','category', 'img', 'price')
+        
+        widgets = {
+            'title': forms.TextInput(attrs={'class':'form-control'}),
+            'description': forms.Textarea(attrs={'class':'form-control'}),
+            'category': forms.Select(attrs={'class':'form-control'})
+        }
+
+#bid form
+
+class BidForm(forms.ModelForm):
+    class Meta:
+        model = AuctionBids
+        exclude = ['user', 'listing']
