@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import AuctionListings, AuctionBids, Category
+from .models import AuctionListings, AuctionBids, Category, AuctionComments
 
 # Customizing Django app to show all aspects of listing
 
@@ -13,3 +13,4 @@ class AuctionBidsAdmin(admin.ModelAdmin):
 admin.site.register(AuctionListings, AuctionListingAdmin)
 admin.site.register(AuctionBids, AuctionBidsAdmin)
 admin.site.register(Category)
+admin.site.register(AuctionComments)
