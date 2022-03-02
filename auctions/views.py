@@ -105,32 +105,12 @@ def create_listing(request):
 
 @login_required
 def listing_page(request, listing_id):
-    print("inside listing page views.py")
-    listing_page = AuctionListings.objects.get(id=listing_id)
-    print("Printing list page")
     
-    if request.method == "POST":
-        # create a form instance and populate it with data from the request:
-        # request.FILES allows us to handle uploaded files with a model
-        
-        form = BidForm(request.POST)
-        form.instance.user = AuctionListings.request.bid_user
-
-        # check if the form data is valid
-        if form.is_valid():
-            # save the form data to model
-            form.save()
-            return HttpResponseRedirect(reverse("index"))
-
-        else:
-            # if the form is invalid then we re-render the page with the existing format
-            return render(request, "auctions/listing.html", {
-                "form": form
-            })
-
-    return render(request, "auctions/listing.html", {
-            "form": BidForm()
-        })
+    listing = AuctionListings.objects.get(id=listing_id)
+    
+    return render(request, "auctions/listing.html",{
+        "listing": listing,
+    })
 
 @login_required
 def categories(request):

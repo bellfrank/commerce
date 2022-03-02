@@ -56,9 +56,9 @@ class AuctionBids(models.Model):
 class AuctionComments(models.Model):
     # comment = models.CharField(max_length=500, blank=True)
     post = models.ForeignKey(AuctionListings, on_delete=models.CASCADE, related_name="comments")
-    name = models.CharField(max_length=255)
-    body = models.TextField()
-    date_added = models.DateTimeField(auto_now_add=True)
+    name = models.CharField(max_length=255, default="none")
+    body = models.TextField(default="none")
+    # date_added = models.DateTimeField(auto_now_add=True)
 
 
     def __str__(self):

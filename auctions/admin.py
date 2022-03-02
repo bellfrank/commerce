@@ -9,6 +9,9 @@ class AuctionListingAdmin(admin.ModelAdmin):
 class AuctionBidsAdmin(admin.ModelAdmin):
     list_display = ("amount", "user", "listing")
 
+class AuctionListingComments(admin.ModelAdmin):
+    list_display = ("post", "name", "body", "date_added")
+
 # Register your models here
 admin.site.register(AuctionListings, AuctionListingAdmin)
 admin.site.register(AuctionBids, AuctionBidsAdmin)

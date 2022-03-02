@@ -1,10 +1,19 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-    <h2>Listing</h2>
-    <form action="{% url 'listing_page'  %}" method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <input type="submit">
-    </form>
+    <h2>Listing: <mark>{{listing.title.title}}</mark></h2>
+    <br>
+    {% if listing.img %}
+        <img src="{{listing.img.url}}" alt="" style="width:300px;height:400px;">
+    {% endif %}
+    <br>
+    <br>
+    <h3>
+        <div style="color: green;">Price: ${{listing.price}}</div>
+    </h3>
+    <h6><strong>Description:</strong> {{listing.description}}</h6>
+    <h6><strong>Date Posted:</strong> {{listing.last_modified}}</h6>
+    <h6><strong>Category:</strong> {{listing.category.title}}</h6>
+    <h6><strong>Posted by:</strong> {{listing.user}}</h6>
+    
 {% endblock %}
