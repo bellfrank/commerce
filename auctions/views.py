@@ -22,8 +22,7 @@ def index(request):
     
     return render(request, "auctions/index.html",{
         "listings": listings,
-        "bids":bids,
-        "comments": comments
+        "bids":bids
     })
 
 def login_view(request):
@@ -114,11 +113,13 @@ def listing_page(request, listing_id):
 
 @login_required
 def categories(request):
-    category_choices = Category.objects.all().values_list('name','name')
+    category_choices = Category.objects.all()
 
     choice_list = []
     for item in category_choices:
         choice_list.append(item)
+    
+    print(choice_list)
     
     return render(request, "auctions/categories.html", {
             "choice_list": choice_list
