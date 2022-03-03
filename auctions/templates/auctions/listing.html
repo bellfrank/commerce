@@ -1,19 +1,96 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-    <h2>Listing: <mark>{{listing.title.title}}</mark></h2>
+    <h2>Listing: {{listing.title.title}}</h2>
     <br>
-    {% if listing.img %}
-        <img src="{{listing.img.url}}" alt="" style="width:300px;height:400px;">
-    {% endif %}
-    <br>
-    <br>
-    <h3>
-        <div style="color: green;">Price: ${{listing.price}}</div>
-    </h3>
-    <h6><strong>Description:</strong> {{listing.description}}</h6>
-    <h6><strong>Date Posted:</strong> {{listing.last_modified}}</h6>
-    <h6><strong>Category:</strong> {{listing.category.title}}</h6>
-    <h6><strong>Posted by:</strong> {{listing.user}}</h6>
+    <table>
+        <tr>
+            <td style="padding: 15px;">
+            {% if listing.img %}
+                <img src="{{listing.img.url}}" alt="" style="width:300px;height:400px;">
+            {% endif %}
+            </td>
+            <td style="padding: 15px;">
+            <h3>
+                <div style="color: green;">Price: ${{listing.price}}</div>
+            </h3>
+            <h6><strong>Description:</strong> {{listing.description}}</h6>
+            <h6><strong>Date Posted:</strong> {{listing.last_modified}}</h6>
+            <h6><strong>Category:</strong> {{listing.category.title}}</h6>
+            <h6><strong>Posted by:</strong> {{listing.user}}</h6>
+            <br>
+
+            <hr>
+            {% if user.is_authenticated %}
+            <!-- Add to Watchlist form -->
+                <form action="{% url 'favorite_post' listing_id %}" method="post">
+                    {% csrf_token %}
+
+                    {% if watchlisted %}
+                        <button type="submit", name="post_id", value="{{ post.id }}", class="btn btn-danger btn-sm">Remove from Favorites</button>
+                    {% else %}
+                        <button type="submit", name="post_id", value="{{ post.id }}", class="btn btn-primary btn-sm">Add to Favorites</button>
+                    {% endif %}
+                </form>
+            
+            <!-- Placing a bid form -->
+            
+                <h4>hi</h4>
+                <form action="{% url 'listing_page' listing_id %}" method="post">
+                    {% csrf_token %}
+                    {{ bidform }}
+                    <button type="submit", name="post_id", value="{{ post.id }}", class="btn btn-primary btn-sm">Place Bid</button>
+                </form>
+                <h4>hi2</h4>
+            {% endif %}
+            </td>
+        </tr>
+    </table>
+
+            <!-- Comment Form -->
     
+    {% if user.is_authenticated %}
+        <hr>
+        <h2>Comments...</h2>
+
+        {% if not listing.comments.all %}
+            No Comments Yet... <a href="#">
+                Add One
+            </a>
+
+        {% else %}
+        
+        <a href="">Add Comment</a>
+        <br/><br/>
+            {% for comment in listing.comments.all %}
+                <strong>
+                    {{ comment.name }} -
+                </strong>
+                {{ comment.body }}
+            {% endfor %}
+        {% endif %}
+
+        
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <hr>
+        <br>
+        <br>
+        <br>
+
+
+        <div class="form-group">
+            <form action="{% url 'listing_page' listing_id %}" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ listing_form.as_p }}
+                <input type="submit">
+            </form>
+        </div>
+    {% endif %}
+
+
 {% endblock %}

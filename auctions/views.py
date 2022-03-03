@@ -1,13 +1,15 @@
 
+from signal import SIG_DFL
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django import forms
 from django.contrib import messages
 from django.core.mail import send_mail
+from flask import render_template
 
 
 
@@ -97,20 +99,50 @@ def create_listing(request):
             return render(request, "auctions/create_listing.html", {
                 "form": form
             })
+    else:
+        return render(request, "auctions/create_listing.html", {
+                "form": GeeksForm()
+            })
 
-    return render(request, "auctions/create_listing.html", {
-            "form": GeeksForm()
+
+def listing_page(request, listing_id):
+    listing = AuctionListings.objects.get(id=listing_id)
+    # comments = AuctionComments.objects.get()
+    watchlisted = False
+    if listing.favorites.filter(id=request.user.id).exists():
+        watchlisted = True
+    
+
+    if request.method == "POST":
+        form = CommentForm(request.POST, request.FILES)
+        
+        form.instance.post = listing_id
+        form.instance.name = request.user
+
+
+        if form.is_valid():
+            # save the form data to model
+            form.save()
+            return HttpResponseRedirect(reverse("listing_page"))
+        
+        else:
+            # if the form is invalid then we re-render the page with the existing format
+            return render(request, "auctions/listing.html", {
+                "form": form
+            })
+
+    else:
+        return render(request, "auctions/listing.html",{
+            "listing": listing,
+            "listing_form": CommentForm(),
+            "bidform":BidForm(),
+            "listing_id":listing_id,
+            "watchlisted":watchlisted,
         })
 
 @login_required
-def listing_page(request, listing_id):
-    
-    listing = AuctionListings.objects.get(id=listing_id)
-    
-    return render(request, "auctions/listing.html",{
-        "listing": listing,
-    })
-
+def add_comment(request):
+    pass
 @login_required
 def categories(request):
     category_choices = Category.objects.all()
@@ -118,8 +150,6 @@ def categories(request):
     choice_list = []
     for item in category_choices:
         choice_list.append(item)
-    
-    print(choice_list)
     
     return render(request, "auctions/categories.html", {
             "choice_list": choice_list
@@ -129,11 +159,45 @@ def categories(request):
 @login_required
 def categoryview(request, cats):
     category_posts = AuctionListings.objects.filter(category=cats)
+    # comments_posts = AuctionComments.objects.filter(post=cats)
     return render(request, "auctions/categoriesview.html", {
             "cats": cats.title(),
             "category_posts": category_posts
         })
 
+
+@login_required
+def favorite_view(request, pk):
+    # a different way of retrieving user submitted information
+    post = get_object_or_404(AuctionListings, id=pk)
+    favorited = False
+    
+    # checking to see if user favorited post
+    if post.favorites.filter(id=request.user.id).exists():
+        post.favorites.remove(request.user)
+        favorited = False
+    
+    else:
+        post.favorites.add(request.user)
+        favorited = True
+
+    return HttpResponseRedirect(reverse('listing_page', args=[str(pk)]))
+
+@login_required
+def watchlist(request):
+    listings = AuctionListings.objects.filter(favorites=request.user)
+
+    return render(request, "watchlist.html", {
+        "listings":listings,
+    })
+
+
+
+
+
+
+
+# DJANGO FORMS ******************************************************************
 
 class GeeksForm(forms.ModelForm):
     # specify the name of model to use
@@ -147,9 +211,18 @@ class GeeksForm(forms.ModelForm):
             'category': forms.Select(attrs={'class':'form-control'})
         }
 
-#bid form
-
 class BidForm(forms.ModelForm):
     class Meta:
         model = AuctionBids
         exclude = ['user', 'listing']
+        widgets = {
+            'amount': forms.TimeInput(attrs={'class':'form-control'}),
+        }
+
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = AuctionComments
+        exclude = ['post', 'name']
+        widgets = {
+            'add_comment': forms.Textarea(attrs={'class':'form-control'}),
+        }

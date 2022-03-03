@@ -7,20 +7,23 @@
 
     <div class="w-layout-grid get-started-grid">
     {% for listing in category_posts %}
-        <div  class="feature-card w-inline-block" >
-            <div class="tag">
-            <div >${{listing.price}}</div>
-            </div>
-            
-            <div class="licence-graphic">
-            {% if listing.img %}
-            <img src="{{listing.img.url}}" alt="" class="started-asset">
-            {% endif %}
-            </div>
-            <h5>{{listing.title}}</h5>
-            <p>{{listing.description}}<br></p>
-            <!-- <a href="/playgorund/filter" class="feature-card w-inline-block"> -->
-        </div>
+         <!-- <a href="{% url 'create_listing' %}"> -->
+            <a href="{% url 'listing_page' listing.id %}" style="text-decoration: none;">
+                <div  class="feature-card w-inline-block" >
+                  <h5>{{listing.title}}</h5>
+                  <br>
+                  <div class="licence-graphic">
+                    {% if listing.img %}
+                    <img src="{{listing.img.url}}" alt="" class="started-asset">
+                    {% endif %}
+                  </div>
+                  <p style="color: black;">Price: ${{listing.price}}<p>
+                  Description: {{listing.description}}
+                  <!-- <a href="/playgorund/filter" class="feature-card w-inline-block"> -->
+                </div>
+              </a>
+                <!-- </a> -->
+              <!-- </a> -->
         <!-- </a> -->
     {% endfor %}
     </div>

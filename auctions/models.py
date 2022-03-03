@@ -23,8 +23,6 @@ class AuctionListings(models.Model):
     # make our user foreign key so if user deletes account, his posts get removed as well :) 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
-    favorites = models.ManyToManyField(User, related_name='blog_posts')
-
     title = models.CharField(max_length=64)
     description = models.TextField(max_length=64)
     last_modified = models.DateField(auto_now_add = True)
@@ -35,8 +33,10 @@ class AuctionListings(models.Model):
 
     category = models.CharField(max_length=64, blank=True, null=True, choices=choice_list)
 
+    favorites = models.ManyToManyField(User, related_name='blog_posts')
+
     def __str__(self):
-        return f"{self.id}: {self.title} {self.description} {self.url} {self.category}"
+        return f"{self.id}: {self.title} {self.description} {self.category}"
 
 #bids
 class AuctionBids(models.Model):
@@ -58,8 +58,8 @@ class AuctionComments(models.Model):
     post = models.ForeignKey(AuctionListings, on_delete=models.CASCADE, related_name="comments")
     name = models.CharField(max_length=255, default="none")
     body = models.TextField(default="none")
+
     # date_added = models.DateTimeField(auto_now_add=True)
 
-
     def __str__(self):
-        return f"{self.id}: {self.post.title} {self.name} "
+        return f"{self.id}: {self.post} {self.name}"
