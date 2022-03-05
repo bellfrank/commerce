@@ -2,10 +2,10 @@
 
 {% block body %}
 
-{% if category_posts %}
+
     <h2> {{ cats }}</h2>
 
-    <div class="w-layout-grid get-started-grid">
+  <div class="w-layout-grid get-started-grid">
     {% for listing in category_posts %}
          <!-- <a href="{% url 'create_listing' %}"> -->
             <a href="{% url 'listing_page' listing.id %}" style="text-decoration: none;">
@@ -25,12 +25,11 @@
                 <!-- </a> -->
               <!-- </a> -->
         <!-- </a> -->
+    {% empty %}
+            
+      <h4>No listings in this Category</h4>
     {% endfor %}
-    </div>
-
-{% else %}
-    <h2>Sorry, this page doesn't exist</h2>
-
-{% endif %}
+    
+  </div>
 
 {% endblock %}

@@ -178,3 +178,66 @@ p {
     font-size: 25px;
     letter-spacing: 1px;
   }
+
+
+
+
+/* implementing a grid display */
+
+* {
+  box-sizing: border-box;
+}
+
+.left {
+  width: 25%;
+  float: left;
+  padding: 15px;
+  border: 1px solid red;
+}
+
+.right {
+  width: 75%;
+  float: left;
+  padding: 15px;
+  border: 1px solid red;
+}
+
+
+  /* Live status green circle */
+  .blob {
+    background: green;
+    border-radius: 50%;
+    margin: 10px;
+    height: 20px;
+    width: 20px;
+  
+    box-shadow: green;
+    transform: scale(1);
+    animation: pulse 2s infinite;
+  }
+  .blob1 {
+    background: red;
+    border-radius: 50%;
+    margin: 10px;
+    height: 20px;
+    width: 20px;
+  
+    box-shadow: red;
+  }
+  
+  @keyframes pulse {
+    0% {
+      transform: scale(0.95);
+      box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.7);
+    }
+  
+    70% {
+      transform: scale(1);
+      box-shadow: 0 0 0 10px rgba(0, 0, 0, 0);
+    }
+  
+    100% {
+      transform: scale(0.95);
+      box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+    }
+  }

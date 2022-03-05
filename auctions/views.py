@@ -104,14 +104,41 @@ def create_listing(request):
                 "form": GeeksForm()
             })
 
+@login_required
+def close_listing(request, listing_id):
+    # getting the objects for the specific page
+    listing = AuctionListings.objects.get(id=listing_id)
+    # setting status to false and saving 
+    if listing.status:
+        listing.status = False
+    
+    listing.save()
+
+    return HttpResponseRedirect(reverse('listing_page', args=[str(listing_id)]))
+    
+
 
 def listing_page(request, listing_id):
     listing = AuctionListings.objects.get(id=listing_id)
+
     # comments = AuctionComments.objects.get()
     watchlisted = False
+    
+    # check to see if AuctionListings.status is True else listing is closed
+    status = listing.status
+
+    # does the user have closing priveleges?
+    close_privelege = False
+    
+
+    # Check to see if the user seeing page is the person who posted the page
+    if listing.user == request.user:
+        close_privelege = True
+
+    
+    # checking databse to see if it's a favorited listing
     if listing.favorites.filter(id=request.user.id).exists():
         watchlisted = True
-    
 
     if request.method == "POST":
         form = CommentForm(request.POST, request.FILES)
@@ -136,13 +163,16 @@ def listing_page(request, listing_id):
             "listing": listing,
             "listing_form": CommentForm(),
             "bidform":BidForm(),
+            "close_privelege":close_privelege,
             "listing_id":listing_id,
             "watchlisted":watchlisted,
+            "status":status,
         })
 
 @login_required
 def add_comment(request):
     pass
+
 @login_required
 def categories(request):
     category_choices = Category.objects.all()
@@ -197,6 +227,10 @@ def watchlist(request):
 
 
 
+
+
+
+
 # DJANGO FORMS ******************************************************************
 
 class GeeksForm(forms.ModelForm):
@@ -215,9 +249,6 @@ class BidForm(forms.ModelForm):
     class Meta:
         model = AuctionBids
         exclude = ['user', 'listing']
-        widgets = {
-            'amount': forms.TimeInput(attrs={'class':'form-control'}),
-        }
 
 class CommentForm(forms.ModelForm):
     class Meta:

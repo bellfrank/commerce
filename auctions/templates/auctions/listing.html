@@ -1,56 +1,102 @@
 {% extends "auctions/layout.html" %}
+{% load static %}
+
 
 {% block body %}
+<style>
+    * {
+      box-sizing: border-box;
+    }
+    
+    .header {
+      border: 1px solid red;
+      padding: 15px;
+    }
+    
+    .left {
+      width: 25%;
+      float: left;
+      padding: 15px;
+      border: 1px solid red;
+    }
+    
+    .right {
+      width: 75%;
+      float: left;
+      padding: 60px;
+      border: 1px solid red;
+    }
+    </style>
     <h2>Listing: {{listing.title.title}}</h2>
     <br>
-    <table>
-        <tr>
-            <td style="padding: 15px;">
+
+   
+    
+    <!-- arranging website into a row -->
+    <div class="left">
             {% if listing.img %}
                 <img src="{{listing.img.url}}" alt="" style="width:300px;height:400px;">
             {% endif %}
-            </td>
-            <td style="padding: 15px;">
+    </div>
+    <div class="right">
+
+        {% if user.is_authenticated and status and close_privelege  %}
+        <form action="{% url 'close_listing' listing_id %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger btn-sm" style="float: right;">Close Listing</button>
+        </form>
+        {% endif %}
+            {% if listing.status %}
+                <strong>Live</strong>
+                <div class="blob" style="float:top;"></div>
+
+            {% else %}
+                <strong>Closed</strong>
+                <div class="blob1"></div>
+            {% endif %}
+
+            <br>
             <h3>
-                <div style="color: green;">Price: ${{listing.price}}</div>
+                <div style="color: green;">Highest Bid: ${{listing.price}}</div>
             </h3>
+            <br>
             <h6><strong>Description:</strong> {{listing.description}}</h6>
             <h6><strong>Date Posted:</strong> {{listing.last_modified}}</h6>
             <h6><strong>Category:</strong> {{listing.category.title}}</h6>
             <h6><strong>Posted by:</strong> {{listing.user}}</h6>
             <br>
 
+            <!-- Placing a bid form -->
+            {% if status %}
+            <form action="{% url 'listing_page' listing_id %}" method="post">
+                {% csrf_token %}
+                {{ bidform }}
+                <button type="submit", name="post_id", value="{{ post.id }}", class="btn btn-primary btn-sm">Place Bid</button>
+            </form>
+            {% endif %}
             <hr>
-            {% if user.is_authenticated %}
+            {% if user.is_authenticated and status %}
             <!-- Add to Watchlist form -->
                 <form action="{% url 'favorite_post' listing_id %}" method="post">
                     {% csrf_token %}
 
                     {% if watchlisted %}
-                        <button type="submit", name="post_id", value="{{ post.id }}", class="btn btn-danger btn-sm">Remove from Favorites</button>
+                        <button type="submit", name="post_id", value="{{ post.id }}", class="btn btn-danger btn-sm">Remove from Watchlist</button>
                     {% else %}
-                        <button type="submit", name="post_id", value="{{ post.id }}", class="btn btn-primary btn-sm">Add to Favorites</button>
+                        <button type="submit", name="post_id", value="{{ post.id }}", class="btn btn-primary btn-sm">Add to Watchlist</button>
                     {% endif %}
                 </form>
+                <br>
+                
+                 <!-- close listing option for lister -->
             
-            <!-- Placing a bid form -->
-            
-                <h4>hi</h4>
-                <form action="{% url 'listing_page' listing_id %}" method="post">
-                    {% csrf_token %}
-                    {{ bidform }}
-                    <button type="submit", name="post_id", value="{{ post.id }}", class="btn btn-primary btn-sm">Place Bid</button>
-                </form>
-                <h4>hi2</h4>
             {% endif %}
-            </td>
-        </tr>
-    </table>
+        </div>
+
 
             <!-- Comment Form -->
-    
     {% if user.is_authenticated %}
-        <hr>
+        
         <h2>Comments...</h2>
 
         {% if not listing.comments.all %}
@@ -59,9 +105,8 @@
             </a>
 
         {% else %}
-        
-        <a href="">Add Comment</a>
-        <br/><br/>
+            <a href="">Add Comment</a>
+            <br/><br/>
             {% for comment in listing.comments.all %}
                 <strong>
                     {{ comment.name }} -
@@ -77,20 +122,17 @@
         <br>
         <br>
         <br>
-        <hr>
         <br>
         <br>
         <br>
-
-
-        <div class="form-group">
-            <form action="{% url 'listing_page' listing_id %}" method="post" enctype="multipart/form-data">
-                {% csrf_token %}
-                {{ listing_form.as_p }}
-                <input type="submit">
-            </form>
-        </div>
     {% endif %}
-
-
 {% endblock %}
+
+
+<!-- <div class="form-group">
+    <form action="{% url 'listing_page' listing_id %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ listing_form.as_p }}
+        <input type="submit">
+    </form>
+</div> -->
