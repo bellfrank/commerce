@@ -1,3 +1,4 @@
+from time import timezone
 from typing_extensions import Required
 from django.contrib.auth.models import AbstractUser
 from django.db import models
@@ -40,7 +41,7 @@ class AuctionListings(models.Model):
     favorites = models.ManyToManyField(User, related_name='blog_posts')
 
     def __str__(self):
-        return f"{self.id}: {self.title} {self.description} {self.category} {self.status}"
+        return f"{self.id}: {self.title} {self.price} {self.description} {self.category} {self.status}"
 
 #bids
 class AuctionBids(models.Model):
@@ -48,7 +49,7 @@ class AuctionBids(models.Model):
     amount = models.DecimalField(max_digits=6, decimal_places=2, blank=False)
 
     # user(to log the user)
-    user = models.ForeignKey(AuctionListings, on_delete=models.CASCADE, related_name="bid_user", blank=False)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="biduser", blank=False)
 
     # listing(to log the listing it belongs to)
     listing = models.ForeignKey(AuctionListings, on_delete=models.CASCADE, related_name="bid_listing", blank=False)
@@ -63,7 +64,7 @@ class AuctionComments(models.Model):
     name = models.CharField(max_length=255, default="none")
     body = models.TextField(default="none")
 
-    # date_added = models.DateTimeField(auto_now_add=True)
+    date_added = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"{self.id}: {self.post} {self.name}"

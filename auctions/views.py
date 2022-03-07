@@ -10,6 +10,7 @@ from django import forms
 from django.contrib import messages
 from django.core.mail import send_mail
 from flask import render_template
+from numpy import double
 
 
 
@@ -117,6 +118,13 @@ def close_listing(request, listing_id):
     return HttpResponseRedirect(reverse('listing_page', args=[str(listing_id)]))
     
 
+def place_bid(request, listing_id):
+    if request.method == "POST":
+        pass
+
+
+
+
 
 def listing_page(request, listing_id):
     listing = AuctionListings.objects.get(id=listing_id)
@@ -140,34 +148,34 @@ def listing_page(request, listing_id):
     if listing.favorites.filter(id=request.user.id).exists():
         watchlisted = True
 
+    
+
     if request.method == "POST":
-        form = CommentForm(request.POST, request.FILES)
         
-        form.instance.post = listing_id
-        form.instance.name = request.user
+        # retrieving Bid Form data
+        form = BidForm(request.POST)
+        form.instance.user = request.user
+        form.instance.listing = listing
 
+        bid = double(request.POST['amount'])
 
-        if form.is_valid():
-            # save the form data to model
-            form.save()
-            return HttpResponseRedirect(reverse("listing_page"))
+        if bid > listing.price:
+            listing.price = bid
+            # saving form and updating highest bid price on two models
+            if form.is_valid():
+                listing.save()
+                form.save()
+                return HttpResponseRedirect(reverse('listing_page', args=[str(listing_id)]))
         
-        else:
-            # if the form is invalid then we re-render the page with the existing format
-            return render(request, "auctions/listing.html", {
-                "form": form
-            })
-
-    else:
-        return render(request, "auctions/listing.html",{
-            "listing": listing,
-            "listing_form": CommentForm(),
-            "bidform":BidForm(),
-            "close_privelege":close_privelege,
-            "listing_id":listing_id,
-            "watchlisted":watchlisted,
-            "status":status,
-        })
+    return render(request, "auctions/listing.html",{
+        "listing": listing,
+        "listing_form": CommentForm(),
+        "bidform":BidForm(),
+        "close_privelege":close_privelege,
+        "listing_id":listing_id,
+        "watchlisted":watchlisted,
+        "status":status,
+    })
 
 @login_required
 def add_comment(request):

@@ -8,35 +8,27 @@
     <section class="w-layout-grid get-started-grid">
   
     {% for listing in listings %}
-    <!-- <a href="{% url 'create_listing' %}"> -->
-        <a href="{% url 'listing_page' listing.id %}" style="text-decoration: none;">
-        <div  class="feature-card w-inline-block" >
-          <h5>{{listing.title}}</h5>
-          <br>
-          <div class="licence-graphic">
-            {% if listing.img %}
-            <img src="{{listing.img.url}}" alt="" class="started-asset">
-            {% endif %}
+      {% if listing.status %}
+      <!-- <a href="{% url 'create_listing' %}"> -->
+          <a href="{% url 'listing_page' listing.id %}" style="text-decoration: none;">
+          <div  class="feature-card w-inline-block" >
+            <h5>{{listing.title}}</h5>
+            <br>
+            <div class="licence-graphic">
+              {% if listing.img %}
+              <img src="{{listing.img.url}}" alt="" class="started-asset">
+              {% endif %}
+            </div>
+            <p style="color: black;">Price: ${{listing.price}}<p>
+            Description: {{listing.description|slice:":100"}}
           </div>
-          <p style="color: black;">Price: ${{listing.price}}<p>
-          Description: {{listing.description|slice:":100"}}
-          <!-- <a href="/playgorund/filter" class="feature-card w-inline-block"> -->
-        </div>
-      </a>
-        <!-- </a> -->
-      <!-- </a> -->
+        </a>
+      {% endif %}
     
     {% endfor %}
 
     </section>
-
 {% endblock %}
-
-        <!-- <h3>Details</h3>
-        <li>{{listing.description}}</li>
-        <li>Listed by: {{listing.user}}</li>
-        <li>Category: {{listing.category}} </li>
-        <li>Last Updated: {{listing.last_modified}} </li> -->
 
 
 

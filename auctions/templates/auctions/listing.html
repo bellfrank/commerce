@@ -9,7 +9,6 @@
     }
     
     .header {
-      border: 1px solid red;
       padding: 15px;
     }
     
@@ -17,17 +16,15 @@
       width: 25%;
       float: left;
       padding: 15px;
-      border: 1px solid red;
     }
     
     .right {
       width: 75%;
       float: left;
       padding: 60px;
-      border: 1px solid red;
     }
     </style>
-    <h2>Listing: {{listing.title.title}}</h2>
+    <h2 style="color: blue;">{{listing.title.title}}</h2>
     <br>
 
    
@@ -71,7 +68,7 @@
             <form action="{% url 'listing_page' listing_id %}" method="post">
                 {% csrf_token %}
                 {{ bidform }}
-                <button type="submit", name="post_id", value="{{ post.id }}", class="btn btn-primary btn-sm">Place Bid</button>
+                <button type="submit" name="bid" class="btn btn-primary btn-sm">Place Bid</button>
             </form>
             {% endif %}
             <hr>
@@ -127,12 +124,3 @@
         <br>
     {% endif %}
 {% endblock %}
-
-
-<!-- <div class="form-group">
-    <form action="{% url 'listing_page' listing_id %}" method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ listing_form.as_p }}
-        <input type="submit">
-    </form>
-</div> -->
