@@ -24,7 +24,7 @@
       padding: 60px;
     }
     </style>
-    <h2 style="color: blue;">{{listing.title.title}}</h2>
+    <h2 style="color: black;">{{listing.title.title}}</h2>
     <br>
 
    
@@ -64,6 +64,7 @@
             <br>
 
             <!-- Placing a bid form -->
+
             {% if status %}
             <form action="{% url 'listing_page' listing_id %}" method="post">
                 {% csrf_token %}
@@ -71,6 +72,11 @@
                 <button type="submit" name="bid" class="btn btn-primary btn-sm">Place Bid</button>
             </form>
             {% endif %}
+            {% if success_message != None %}
+            <br>
+            <h6 style="color: green;">{{success_message}}</h6>
+            {% endif %}
+            <br>
             <hr>
             {% if user.is_authenticated and status %}
             <!-- Add to Watchlist form -->
@@ -96,10 +102,14 @@
         
         <h2>Comments...</h2>
 
+        <form action="{% url 'listing_page' listing_id %}" method="post">
+            {% csrf_token %}
+            {{ bidform }}
+            <button type="submit" name="bid" class="btn btn-primary btn-sm">Place Bid</button>
+        </form>
+        
         {% if not listing.comments.all %}
-            No Comments Yet... <a href="#">
-                Add One
-            </a>
+            No Comments Yet.
 
         {% else %}
             <a href="">Add Comment</a>

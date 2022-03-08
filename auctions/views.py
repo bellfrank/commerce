@@ -137,6 +137,8 @@ def listing_page(request, listing_id):
 
     # does the user have closing priveleges?
     close_privelege = False
+
+    success_message = None
     
 
     # Check to see if the user seeing page is the person who posted the page
@@ -165,8 +167,11 @@ def listing_page(request, listing_id):
             if form.is_valid():
                 listing.save()
                 form.save()
-                return HttpResponseRedirect(reverse('listing_page', args=[str(listing_id)]))
-        
+                success_message = "Bid Placed Succesfully!"
+                # return HttpResponseRedirect(reverse('listing_page', args=[str(listing_id)]))
+        else:
+            success_message = "Bid must be higher than highest bid price."
+
     return render(request, "auctions/listing.html",{
         "listing": listing,
         "listing_form": CommentForm(),
@@ -175,7 +180,9 @@ def listing_page(request, listing_id):
         "listing_id":listing_id,
         "watchlisted":watchlisted,
         "status":status,
+        "success_message":success_message,
     })
+
 
 @login_required
 def add_comment(request):
