@@ -102,23 +102,26 @@
         
         <h2>Comments...</h2>
 
-        <form action="{% url 'listing_page' listing_id %}" method="post">
+        <form action="{% url 'add_comment' listing_id %}" method="post">
             {% csrf_token %}
-            {{ bidform }}
-            <button type="submit" name="bid" class="btn btn-primary btn-sm">Place Bid</button>
+            {{ listing_form }}
+            <br>
+            <button type="submit" name="comment" class="btn btn-primary btn-sm">Add Comment</button>
         </form>
         
         {% if not listing.comments.all %}
             No Comments Yet.
 
         {% else %}
-            <a href="">Add Comment</a>
             <br/><br/>
             {% for comment in listing.comments.all %}
+                <ul>
                 <strong>
                     {{ comment.name }} -
                 </strong>
                 {{ comment.body }}
+                </ul>
+                
             {% endfor %}
         {% endif %}
 

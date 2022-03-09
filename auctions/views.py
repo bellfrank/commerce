@@ -185,8 +185,54 @@ def listing_page(request, listing_id):
 
 
 @login_required
-def add_comment(request):
-    pass
+def add_comment(request, listing_id):
+    listing = AuctionListings.objects.get(id=listing_id)
+
+    # comments = AuctionComments.objects.get()
+    watchlisted = False
+    
+    # check to see if AuctionListings.status is True else listing is closed
+    status = listing.status
+
+    # does the user have closing priveleges?
+    close_privelege = False
+
+    success_message = None
+    
+
+    # Check to see if the user seeing page is the person who posted the page
+    if listing.user == request.user:
+        close_privelege = True
+
+    
+    # checking databse to see if it's a favorited listing
+    if listing.favorites.filter(id=request.user.id).exists():
+        watchlisted = True
+
+    
+
+    if request.method == "POST":
+
+        # retrieving Bid Form data
+        form = CommentForm(request.POST)
+        form.instance.post = listing
+        form.instance.name = request.user
+
+        if form.is_valid():
+            form.save()
+                # return HttpResponseRedirect(reverse('listing_page', args=[str(listing_id)]))
+
+    return render(request, "auctions/listing.html",{
+        "listing": listing,
+        "listing_form": CommentForm(),
+        "bidform":BidForm(),
+        "close_privelege":close_privelege,
+        "listing_id":listing_id,
+        "watchlisted":watchlisted,
+        "status":status,
+        "success_message":success_message,
+    })
+    
 
 @login_required
 def categories(request):
@@ -270,5 +316,5 @@ class CommentForm(forms.ModelForm):
         model = AuctionComments
         exclude = ['post', 'name']
         widgets = {
-            'add_comment': forms.Textarea(attrs={'class':'form-control'}),
+            'body': forms.TextInput(attrs={'class':'form-control'}),
         }
