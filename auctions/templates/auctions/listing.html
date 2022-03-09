@@ -101,13 +101,8 @@
     {% if user.is_authenticated %}
         
         <h2>Comments...</h2>
+        <hr>
 
-        <form action="{% url 'add_comment' listing_id %}" method="post">
-            {% csrf_token %}
-            {{ listing_form }}
-            <br>
-            <button type="submit" name="comment" class="btn btn-primary btn-sm">Add Comment</button>
-        </form>
         
         {% if not listing.comments.all %}
             No Comments Yet.
@@ -116,14 +111,21 @@
             <br/><br/>
             {% for comment in listing.comments.all %}
                 <ul>
-                <strong>
-                    {{ comment.name }} -
-                </strong>
-                {{ comment.body }}
+                <br>
+                <h4>{{ comment.body }}</h4> -{{ comment.name }}
+                <br>
+                Posted on: {{comment.date_added}}
                 </ul>
                 
             {% endfor %}
         {% endif %}
+
+        <form action="{% url 'add_comment' listing_id %}" method="post">
+            {% csrf_token %}
+            {{ listing_form }}
+            <br>
+            <button type="submit" name="comment" class="btn btn-primary btn-sm">Add Comment</button>
+        </form>
 
         
         <br>
