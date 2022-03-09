@@ -167,10 +167,13 @@ def listing_page(request, listing_id):
             if form.is_valid():
                 listing.save()
                 form.save()
-                success_message = "Bid Placed Succesfully!"
+                # success_message = "Bid Placed Succesfully!"
+                messages.success(request, ('Your bid has been placed Succesfully!'))
+
                 # return HttpResponseRedirect(reverse('listing_page', args=[str(listing_id)]))
         else:
             success_message = "Bid must be higher than highest bid price."
+
 
     return render(request, "auctions/listing.html",{
         "listing": listing,
@@ -220,6 +223,8 @@ def add_comment(request, listing_id):
 
         if form.is_valid():
             form.save()
+            messages.success(request, ('Your comment was succesfully posted!'))
+
                 # return HttpResponseRedirect(reverse('listing_page', args=[str(listing_id)]))
 
     return render(request, "auctions/listing.html",{
