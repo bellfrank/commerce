@@ -13,7 +13,7 @@ class User(AbstractUser):
 #     def __str__(self):
 #         return self.name
 
-# category_choices = [('coding','coding'),('sports', 'sports'),('entertainment','entertainment')]
+choice_list = [('coding','coding'),('sports', 'sports'),('entertainment','entertainment')]
 
 # category_choices = Category.objects.all().values_list('name','name')
 
@@ -36,7 +36,7 @@ class AuctionListings(models.Model):
     # = models.URLField(blank=True, null=True)
     img = models.ImageField(upload_to='images/')
 
-    # category = models.CharField(max_length=64, blank=True, null=True, choices=choice_list)
+    category = models.CharField(max_length=64, blank=True, null=True, choices=choice_list)
 
     favorites = models.ManyToManyField(User, related_name='blog_posts')
 
