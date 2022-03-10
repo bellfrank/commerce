@@ -14,7 +14,7 @@ from numpy import double
 
 
 
-from .models import User, AuctionListings, AuctionBids, AuctionComments, Category
+from .models import User, AuctionListings, AuctionBids, AuctionComments
 
 
 def index(request):
@@ -239,27 +239,27 @@ def add_comment(request, listing_id):
     })
     
 
-@login_required
-def categories(request):
-    category_choices = Category.objects.all()
+# @login_required
+# def categories(request):
+#     category_choices = Category.objects.all()
 
-    choice_list = []
-    for item in category_choices:
-        choice_list.append(item)
+#     choice_list = []
+#     for item in category_choices:
+#         choice_list.append(item)
     
-    return render(request, "auctions/categories.html", {
-            "choice_list": choice_list
-        })
+#     return render(request, "auctions/categories.html", {
+#             "choice_list": choice_list
+#         })
 
 
-@login_required
-def categoryview(request, cats):
-    category_posts = AuctionListings.objects.filter(category=cats)
-    # comments_posts = AuctionComments.objects.filter(post=cats)
-    return render(request, "auctions/categoriesview.html", {
-            "cats": cats.title(),
-            "category_posts": category_posts
-        })
+# @login_required
+# def categoryview(request, cats):
+#     category_posts = AuctionListings.objects.filter(category=cats)
+#     # comments_posts = AuctionComments.objects.filter(post=cats)
+#     return render(request, "auctions/categoriesview.html", {
+#             "cats": cats.title(),
+#             "category_posts": category_posts
+#         })
 
 
 @login_required
@@ -303,12 +303,11 @@ class GeeksForm(forms.ModelForm):
     # specify the name of model to use
     class Meta:
         model = AuctionListings
-        fields = ('title', 'description','category', 'img', 'price')
+        fields = ('title', 'description', 'img', 'price')
         
         widgets = {
             'title': forms.TextInput(attrs={'class':'form-control'}),
             'description': forms.Textarea(attrs={'class':'form-control'}),
-            'category': forms.Select(attrs={'class':'form-control'})
         }
 
 class BidForm(forms.ModelForm):

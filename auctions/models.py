@@ -7,19 +7,19 @@ from django.db import models
 class User(AbstractUser):
     pass
 
-class Category(models.Model):
-    name = models.CharField(max_length=64)
+# class Category(models.Model):
+#     name = models.CharField(max_length=64)
 
-    def __str__(self):
-        return self.name
+#     def __str__(self):
+#         return self.name
 
 # category_choices = [('coding','coding'),('sports', 'sports'),('entertainment','entertainment')]
 
-category_choices = Category.objects.all().values_list('name','name')
+# category_choices = Category.objects.all().values_list('name','name')
 
-choice_list = []
-for item in category_choices:
-    choice_list.append(item)
+# choice_list = []
+# for item in category_choices:
+#     choice_list.append(item)
 
 class AuctionListings(models.Model):
     # make our user foreign key so if user deletes account, his posts get removed as well :) 
@@ -36,12 +36,12 @@ class AuctionListings(models.Model):
     # = models.URLField(blank=True, null=True)
     img = models.ImageField(upload_to='images/')
 
-    category = models.CharField(max_length=64, blank=True, null=True, choices=choice_list)
+    # category = models.CharField(max_length=64, blank=True, null=True, choices=choice_list)
 
     favorites = models.ManyToManyField(User, related_name='blog_posts')
 
     def __str__(self):
-        return f"{self.id}: {self.title} {self.price} {self.description} {self.category} {self.status}"
+        return f"{self.id}: {self.title} {self.price} {self.description} {self.status}"
 
 #bids
 class AuctionBids(models.Model):
